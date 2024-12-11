@@ -1,0 +1,90 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ */
+
+package com.mycompany.v2q3;
+
+/**
+ *
+ * @author batrisyia
+ */
+import java.util.Scanner;
+public class V2Q3 {
+    
+    // Arrays to store bookTitles and bookAuthor and a counter to keep track num of book
+        String [] bookTitles = new String [100];
+        String [] bookAuthor=new String [100];
+        int bookCount=0;
+        
+        //Method to add a new book
+        public void addBook(){
+            if(bookCount<100){ 
+                Scanner sc=new Scanner(System.in);
+                System.out.print("Enter book title: ");
+                bookTitles[bookCount]=sc.nextLine();//store book title in the array bookTitles
+                System.out.print("Enter book author: ");
+                bookAuthor[bookCount]=sc.nextLine();//store book author in array bookAuthor
+                bookCount++;//increment book count after adding a book
+            }else{
+                System.out.print("Cannot add more book. Reached maximum book");
+            }
+        }
+        
+        //Method to display details of a book based on title
+        public void bookDetails(String title) {
+        for (int i = 0; i < bookCount; i++) {//loop through all books to find the book with same title
+            if (bookTitles[i].equalsIgnoreCase(title)) { //if the book found(ignore the case), display the title and author
+                System.out.println("Book Details: " + bookTitles[i] + " by " + bookAuthor[i]);
+                return;
+            }
+        }
+        System.out.println("Book not found.");
+    }
+              
+        //Method to display list of all books
+        public void allBook(){
+            for (int i=0; i<bookCount; i++){//loop through all books and print the title and author
+                System.out.println(bookTitles[i] +" by "+bookAuthor[i]);
+            }  
+        }
+        
+        //Main menthod program start execution
+        public static void main(String[] args) {
+        V2Q3 book = new V2Q3();//to create an object 'book' from clas V2Q3 to access all methods
+        Scanner sc = new Scanner(System.in);
+        int num;
+        
+        //Keep displaying the menu until user choose 4
+        do {
+            System.out.println("\nChoose an action:");
+            System.out.println("1. Add a book");
+            System.out.println("2. View book details");
+            System.out.println("3. View all books");
+            System.out.println("4. Exit");
+            System.out.println("Choice of action: ");
+            num = sc.nextInt();
+            sc.nextLine();
+            
+            //Use switch statement to execute the action based on users choice
+            switch (num) {
+                case 1:
+                    book.addBook();//call addBook() method
+                    break;
+                case 2:
+                    System.out.println("Enter book title: ");
+                    String titleView = sc.nextLine();
+                    book.bookDetails(titleView);//call bookDetails method to display the book details
+                    break;
+                case 3:
+                    book.allBook();//call allBook() method
+                    break;
+                case 4:
+                    System.out.println("Program ending...");//user choose to exit, break the loop
+                    break;
+                default:
+                    //user enter num other than 1,2,3,4
+                    System.out.println("Invalid choice. Please try again.");
+            }
+        } while (num != 4);//repeat loop until user choose 4
+    }
+}
