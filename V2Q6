@@ -1,0 +1,131 @@
+package com.mycompany.g101;
+
+import java.util.Scanner;
+
+public class G101 {
+
+    public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+        System.out.print("Enter the number of test cases: ");
+        int testCases = input.nextInt();
+        input.nextLine(); // Consume newline
+
+        for (int t = 0; t < testCases; t++) {
+            System.out.println("Enter name: ");
+            String name = input.nextLine();
+
+            System.out.println("Enter current time (hh:mm:ss): ");
+            String currentTime = input.nextLine();
+
+            System.out.println("Enter target time (hh:mm:ss): ");
+            String targetTime = input.nextLine();
+
+            // Output header
+            System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+
+            // Generate and print initials
+            String initials = generateInitials(name);
+            if (isKahSing(name)) {
+                initials += "!!!!!!!!!!";
+            }
+            System.out.println(initials);
+
+            // Print welcome message if applicable
+            if (isPrintingWelcomeMessage(name)) {
+                System.out.println("Welcome to G101, Kolej Kediaman Kinabalu, Universiti Malaya!");
+            }
+
+            // Special message for Kah Sing
+            if (isKahSing(name)) {
+                System.out.println("WE KNOW IT’S YOU -- LEE KAH SING!");
+            }
+
+            // Print sleep suggestion
+            if (shouldSleep(currentTime, targetTime)) {
+                System.out.println("SLEEP NOW!!!!!!!!!!");
+            }
+
+            // Calculate and display time interval
+            try {
+                String interval = calculateInterval(currentTime, targetTime);
+                System.out.println(interval);
+            } catch (IllegalArgumentException e) {
+                System.out.println("Error: " + e.getMessage());
+            }
+
+            // Output footer
+            System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+        }
+    }
+
+    // Method to generate initials
+    public static String generateInitials(String name) {
+        String[] parts = name.split("[\\s'_\\-\\.]+"); // Split by spaces, _, -, .
+        StringBuilder initials = new StringBuilder();
+
+        for (String part : parts) {
+            if (!part.equalsIgnoreCase("bin") && !part.equalsIgnoreCase("binti") &&
+                    !part.equalsIgnoreCase("a/l") && !part.equalsIgnoreCase("a/p")) {
+                initials.append(part.charAt(0));
+            }
+        }
+        return initials.toString().toUpperCase();
+    }
+
+    // Method to check if a welcome message should be printed
+    public static boolean isPrintingWelcomeMessage(String name) {
+        String normalized = name.toLowerCase().replaceAll("[\\s'_\\-\\.]+", "");
+        String[] specialNames = {"kahsing", "leekahsing", "kahsinglee",
+                "suresh", "sureshalsubramaniam",
+                "ridwan", "ridwanfaiz", "ridwanfaizbinmohamadhassan"};
+        for (String specialName : specialNames) {
+            if (normalized.equals(specialName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // Determine if the user should sleep
+    public static boolean shouldSleep(String currentTime, String targetTime) {
+        int currentSeconds = convertToSeconds(currentTime);
+        int targetSeconds = convertToSeconds(targetTime);
+        return currentSeconds >= 0 && currentSeconds < 21600 && targetSeconds > 0 && targetSeconds < 21600;
+    }
+
+    // Convert time to seconds
+    public static int convertToSeconds(String time) {
+        try {
+            String[] parts = time.split("[:]");
+            int hours = Integer.parseInt(parts[0]);
+            int minutes = Integer.parseInt(parts[1]);
+            int seconds = Integer.parseInt(parts[2]);
+
+            return hours * 3600 + minutes * 60 + seconds;
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Invalid time format. Please use hh:mm:ss.");
+        }
+    }
+
+    // Calculate the interval between two times
+    public static String calculateInterval(String currentTime, String targetTime) {
+        int currentSeconds = convertToSeconds(currentTime);
+        int targetSeconds = convertToSeconds(targetTime);
+
+        int intervalSeconds = (targetSeconds >= currentSeconds)
+                ? targetSeconds - currentSeconds
+                : 24 * 3600 - currentSeconds + targetSeconds;
+
+        int hours = intervalSeconds / 3600;
+        int minutes = (intervalSeconds % 3600) / 60;
+        int seconds = intervalSeconds % 60;
+
+        return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+    }
+
+    // Check if the name is Kah Sing
+    public static boolean isKahSing(String name) {
+        String normalized = name.replaceAll("[\\s'_\\-\\.]+", "").toLowerCase();
+        return normalized.equals("kahsing") || normalized.equals("leekahsing") || normalized.equals("kahsinglee");
+    }
+}
